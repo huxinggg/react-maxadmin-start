@@ -1,10 +1,11 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 
 const App = () => {
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    window.location.href = "/"
   };
   return (
     <>
@@ -13,12 +14,14 @@ const App = () => {
             height: '100vh'
         }}>
             <div style={{
-                width: 300,margin: '0 auto',
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                marginTop: -100,
-                marginLeft: -100,
+                width: 400,
+                height: 400,
+                margin: 'auto',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
             }}>
                 <h3 style={{color: '#FFFFFF',textAlign: 'center',fontSize: 26}}>系统登录</h3>
                 <Form

@@ -5,7 +5,7 @@ export const menuItemHandle = (menuConfig) => {
     for(let i=0;i<arr?.length;i++){
       let item = arr[i]
       let children = []
-      if(item.children && item.children.length != 0){
+      if(item.children && item.children.length !== 0){
         for(let j=0;j<item.children?.length;j++){
           let jitem = item.children[j]
           if(jitem.name){
@@ -33,7 +33,7 @@ export const getSuperMenuKey = (menuConfig,path) => {
     let arr = [...menuConfig]
     for(let i=0;i<arr?.length;i++){
       let item = arr[i]
-      if(item.children && item.children.length != 0){
+      if(item.children && item.children.length !== 0){
         for(let j=0;j<item.children?.length;j++){
           let jitem = item.children[j]
           if(item.path+jitem.path === path){
@@ -49,7 +49,7 @@ export const routerHandle = (rsConfig) => {
     let newArr = []
     for(let i=0;i<arr?.length;i++){
         let item = arr[i]
-        if(item.children && item.children.length != 0){
+        if(item.children && item.children.length !== 0){
             for(let j=0;j<item.children?.length;j++){
                 let jitem = item.children[j]
                 const {path, ...others} = jitem

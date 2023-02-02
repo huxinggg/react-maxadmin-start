@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, theme, Dropdown, Space } from 'antd';
+import { Layout, Menu, theme, Button } from 'antd';
 import menuConfig from '../../router/config'
 import { useNavigate } from "react-router-dom";
 import * as utils from '../../utils'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  DownOutlined
 } from '@ant-design/icons';
 import { Avatar } from 'antd';
 
@@ -18,8 +17,6 @@ const breadcrumbData = utils.routerHandle(menuConfig)
 
 const Index = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [path,setPath] = useState('')
-  const [keyPath,setkeyPath] = useState([])
   const [openKeys,setOpenKeys] = useState([])
   
   const { token: { colorBgContainer } } = theme.useToken();
@@ -46,7 +43,7 @@ const Index = (props) => {
   }
 
   const getBreadcrumb = () => {
-    let f = breadcrumbData?.find(v => v.path == window.location.pathname)
+    let f = breadcrumbData?.find(v => v.path === window.location.pathname)
     if(f && f.breadcrumb){
       return f.breadcrumb
     }
@@ -74,8 +71,6 @@ const Index = (props) => {
           setOpenKeys(v)
         }} openKeys={openKeys} selectedKeys={activityMenu()} onClick={(v)=>{
           navigate(v.key);
-          setPath(v.key)
-          setkeyPath(v.keyPath)
         }} mode="inline" items={menuItemData} />
       </Sider>
       <Layout className="site-layout">
@@ -107,19 +102,11 @@ const Index = (props) => {
               <Avatar style={{
                 marginRight: 12
               }} size={32}>头像</Avatar>
-              <Dropdown menu={{items: [
-                {
-                  label: <a>退出登录</a>,
-                  key: '1',
-                }
-              ]}} trigger={['click']}>
-                <a style={{color: '#333333'}} onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    用户名
-                    <DownOutlined />
-                  </Space>
-                </a>
-              </Dropdown>
+              <span>欢迎：admin</span>
+              <Button onClick={()=>{
+                localStorage.removeItem("token")
+                navigate("/login")
+              }} type="link">注销</Button>
             </div>
           </div>
         </Header>
