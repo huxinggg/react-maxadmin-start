@@ -3,13 +3,13 @@ import axios from "axios";
 
 const instance = axios.create({
     baseURL: process.env.REACT_APP_API_HOST,
-    timeout: 1000 * 60,
-    headers: {'Authorization': localStorage.getItem('token')}
+    timeout: 1000 * 60
 });
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
+    config.headers = {'Authorization': localStorage.getItem('token')}
     return config;
   }, function (error) {
     // 对请求错误做些什么
@@ -31,6 +31,7 @@ instance.interceptors.response.use(function (response) {
     }
     return response.data?.data;
   }, function (error) {
+    console.log(error)
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
     message.error(error?.message)

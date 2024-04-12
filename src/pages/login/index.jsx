@@ -1,52 +1,68 @@
-import React from "react";
+import React,{ useEffect, useState , useContext} from "react";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-import bg from '../../static/img/bg.png'
-import shadow from '../../static/img/aiwrap.png'
+import { Button, Checkbox, Form, Input, message } from 'antd';
+import styles from './index.module.css'
+import http from '../../lib/http'
+import * as apis from '../../lib/api'
+import Bg from '../../static/img/2.png'
+import { globalContext } from '../../components/context'
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
-  const onFinish = (values) => {
+  const c = useContext(globalContext)
+  const [loading, setLoading] = useState(false)
+  const [form] = Form.useForm()
+  const n = useNavigate()
+
+  useEffect(()=>{
+    let account = localStorage.getItem("account")
+    if(account){
+        form.setFieldsValue({phone: account, rem: true})
+    }
+    // eslint-disable-next-line
+  },[])
+
+  const onFinish = async (values) => {
     console.log('Received values of form: ', values);
-    window.location.href = "/"
+    setLoading(true)
+    try {
+        let ret = await http.post(apis.LOGIN, values)
+        localStorage.setItem("token", ret.token)
+        localStorage.setItem("name", ret.name)
+        if(values.rem){
+            localStorage.setItem("account", values.phone)
+        }else{
+            localStorage.removeItem("account")
+        }
+        let txt = await c.onLoad()
+        if(txt){
+            setLoading(false)
+            message.error(txt)
+            return
+        }
+        n("/")
+    } catch (error) {
+        
+    }
+    setLoading(false)
   };
+
   return (
     <>
         <div style={{
-            backgroundColor: '#2d3a4b',
-            backgroundImage: `url(${bg})`,
             backgroundRepeat: 'no-repeat',
-            backgroundSize: '100vw 100vh',
-            height: '100vh'
+            height: '100vh',
+            position: "relative",
+            background: `url(${Bg})`,
+            backgroundSize: "cover"
         }}>
-            <div style={{
-                width: 420,
-                height: 420,
-                margin: 'auto',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                borderRadius: 4,
-                backgroundColor: '#FFFFFF'
-            }}>
-                <div style={{width: '80%', margin: '0 auto', position: 'relative'}}>
-                    <img src={shadow} style={{
-                        position: 'absolute',
-                        top: 58,
-                        zIndex: 1,
-                        left: -60
-                    }} alt="" />
-                    <div style={{
-                        margin: "55px 0 0 -58px",
-                        padding: "18px 10px 18px 60px",
-                        background: "#189F92",
-                        position: "relative",
-                        color: "#fff",
-                        fontSize: 16
-                    }}>系统登录</div>
-                    <div style={{height: 55}}></div>
+            <div className={styles.loginBox}>
+                <div style={{height: 77}}></div>
+                <div style={{fontSize: 24,fontWeight: 400,color: "#0256FF", textAlign: "center"}}>【{process.env.REACT_APP_NAME}】管理平台</div>
+                <div style={{height: 44}}></div>
+                <div style={{width: 382, margin: "0 auto"}}>
                     <Form
+                        form={form}
                         autoComplete="off"
                         name="normal_login"
                         className="login-form"
@@ -56,11 +72,11 @@ const App = () => {
                         onFinish={onFinish}
                         >
                         <Form.Item
-                            name="username"
+                            name="phone"
                             rules={[
                             {
                                 required: true,
-                                message: '请输入账号',
+                                message: '请输入',
                             },
                             ]}
                         >
@@ -71,7 +87,7 @@ const App = () => {
                             rules={[
                             {
                                 required: true,
-                                message: '请输入密码',
+                                message: '请输入',
                             },
                             ]}
                         >
@@ -82,13 +98,14 @@ const App = () => {
                                 size="large"
                             />
                         </Form.Item>
-                        {/* <Form.Item>
-                            <a className="login-form-forgot" href="">
-                            Forgot password
-                            </a>
-                        </Form.Item> */}
+                        <Form.Item
+                            name="rem"
+                            valuePropName="checked"
+                        >
+                            <Checkbox>记住账号</Checkbox>
+                        </Form.Item>
                         <Form.Item>
-                            <Button style={{
+                            <Button loading={loading} style={{
                                 width: '100%'
                             }} size="large" type="primary" htmlType="submit" className="login-form-button">
                                 登录
