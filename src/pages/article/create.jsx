@@ -85,7 +85,8 @@ const Index = () => {
         "content": data.article_info.content,
         "quiz": data.quiz_info,
         "img": data.article_info.img,
-        "hash_id": data.article_info.hash_id
+        "hash_id": data.article_info.hash_id,
+        "subject": data.article_info.subject
       })
       setDetail(data)
     } catch (error) {
@@ -120,31 +121,33 @@ const Index = () => {
     setLoading(true)
     try {
       const ret = await http.post(apis.ARTICLE_UPDATE, cpV)
-      if (cpV.hash_id) {
-        Modal.confirm({
-          content: "更新成功",
-          okText: "预览",
-          cancelText: "返回列表",
-          onOk: () => {
-            window.open(`${process.env.REACT_APP_FRONT_URL}/article/${cpV.hash_id}`)
-          },
-          onCancel: () => {
-            n("/article/list")
-          }
-        })
-      } else {
-        Modal.confirm({
-          content: "新建成功",
-          okText: "预览",
-          cancelText: "返回列表",
-          onOk: () => {
-            window.open(`${process.env.REACT_APP_FRONT_URL}/article/${ret.hash_id}`)
-          },
-          onCancel: () => {
-            n("/article/list")
-          }
-        })
-      }
+      message.success("操作成功")
+      n("/article/list")
+      // if (cpV.hash_id) {
+      //   Modal.confirm({
+      //     content: "更新成功",
+      //     okText: "预览",
+      //     cancelText: "返回列表",
+      //     onOk: () => {
+      //       window.open(`${process.env.REACT_APP_FRONT_URL}/article/${cpV.hash_id}`)
+      //     },
+      //     onCancel: () => {
+      //       n("/article/list")
+      //     }
+      //   })
+      // } else {
+      //   Modal.confirm({
+      //     content: "新建成功",
+      //     okText: "预览",
+      //     cancelText: "返回列表",
+      //     onOk: () => {
+      //       window.open(`${process.env.REACT_APP_FRONT_URL}/article/${ret.hash_id}`)
+      //     },
+      //     onCancel: () => {
+      //       n("/article/list")
+      //     }
+      //   })
+      // }
       console.log(ret)
     } catch (error) {
 
@@ -173,6 +176,22 @@ const Index = () => {
             </Form.Item>
             <Form.Item rules={[{ required: true }]} label="蓝思值" name="lexile">
               <Input placeholder="请输入" />
+            </Form.Item>
+            <Form.Item label="学科" name="subject">
+              <Select placeholder="请选择" options={[
+                {
+                  label: "Science",
+                  value: "Science"
+                },
+                {
+                  label: "Social Studies",
+                  value: "Social Studies"
+                },
+                {
+                  label: "Arts",
+                  value: "Arts"
+                }
+              ]}></Select>
             </Form.Item>
             <Form.Item rules={[{ required: true }]} label="年级" name="grade">
               <Select placeholder="请选择" options={GradeOptions}></Select>

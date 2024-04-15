@@ -93,6 +93,11 @@ const Index = () => {
             width: 80
         },
         {
+            title: '学科',
+            dataIndex: 'subject',
+            width: 80
+        },
+        {
             title: '年级',
             dataIndex: 'grade',
             width: 80
